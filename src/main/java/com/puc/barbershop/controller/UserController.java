@@ -7,9 +7,11 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puc.barbershop.model.Role;
 import com.puc.barbershop.model.User;
+import com.puc.barbershop.repository.UserRepository;
 import com.puc.barbershop.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -44,6 +46,17 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
+    @GetMapping("/user/{username}")
+    public ResponseEntity<User>getUser(@PathVariable(value = "username") String username){
+        Optional<User> userOptional= userService.getUser(username);
+        if(!userOptional.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            User user = userOptional.get();
+            return new ResponseEntity<User>(user, HttpStatus.OK);
+        }
+    }
+
     @CrossOrigin(origins = "*")
     @PostMapping("/user/save")
     public ResponseEntity<User>saveUser(@RequestBody User user){
@@ -51,6 +64,29 @@ public class UserController {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
 
         return ResponseEntity.created(uri).body(userService.saveUser(user));
+    }
+
+    @PutMapping("/user/{username}")
+    public ResponseEntity<User>updateUser(@PathVariable(value = "username") String username, @RequestBody User user){
+        Optional<User> userOptional= userService.getUser(username);
+        if(!userOptional.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            user.setId(userOptional.get().getId());
+            return new ResponseEntity<User>(userService.saveUser(user), HttpStatus.OK);
+        }
+    }
+
+    @DeleteMapping("/user/{username}")
+    public ResponseEntity<?> deleteUser(@PathVariable(value = "username") String username){
+        Optional<User> userOptional= userService.getUser(username);
+        if(!userOptional.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            User user = userOptional.get();
+            userService.deleteUser(user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
     }
 
     @PostMapping("/role/save")
@@ -81,18 +117,24 @@ public class UserController {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refresh_token);
                 String username = decodedJWT.getSubject();
-                User user = userService.getUser(username);
-                String access_token = JWT.create()
-                        .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000 ))
-                        .withIssuer(request.getRequestURI().toString())
-                        .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
-                        .sign(algorithm);
-                Map<String, String> tokens = new HashMap<>();
-                tokens.put("access_token", access_token);
-                tokens.put("refresh_token", refresh_token);
-                response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+                Optional<User> userOptional= userService.getUser(username);
+                if(!userOptional.isPresent()){
+                    throw new RuntimeException("User not found in database!");
+                }else {
+                    User user = userOptional.get();
+
+                    String access_token = JWT.create()
+                            .withSubject(user.getUsername())
+                            .withExpiresAt(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))
+                            .withIssuer(request.getRequestURI().toString())
+                            .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                            .sign(algorithm);
+                    Map<String, String> tokens = new HashMap<>();
+                    tokens.put("access_token", access_token);
+                    tokens.put("refresh_token", refresh_token);
+                    response.setContentType(APPLICATION_JSON_VALUE);
+                    new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+                }
             } catch(Exception exception){
                 response.setHeader("error", exception.getMessage());
                 response.setStatus(FORBIDDEN.value());
