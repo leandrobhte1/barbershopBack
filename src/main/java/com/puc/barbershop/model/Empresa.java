@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
 @Table(name = "Barbershop")
@@ -19,6 +21,9 @@ public class Empresa {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "empresa_sequence")
     private Long id;
     private String name;
+    private String cnpj;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<User> funcionarios = new ArrayList<>();
     private String cep;
     private String rua;
     private String numero;

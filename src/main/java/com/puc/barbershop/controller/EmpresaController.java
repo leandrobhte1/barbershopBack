@@ -1,15 +1,19 @@
 package com.puc.barbershop.controller;
 
 import com.puc.barbershop.model.Empresa;
+import com.puc.barbershop.model.Role;
 import com.puc.barbershop.model.User;
 import com.puc.barbershop.service.EmpresaService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,10 +29,29 @@ public class EmpresaController {
         return ResponseEntity.ok().body(empresaService.getEmpresas());
     }
 
+    @CrossOrigin(origins = "*")
+    @PostMapping("/empresa/addFuncionario")
+    public ResponseEntity<Empresa>addFuncionario(@RequestBody FuncToEmpresa funcToEmpresa){
+
+        return ResponseEntity.ok().body(empresaService.addFuncToEmpresa(funcToEmpresa.getCnpj(), funcToEmpresa.getCpf()));
+    }
+
+    @DeleteMapping("/empresa/deleteFuncionario")
+    public ResponseEntity<?> deleteFuncionario(@RequestBody FuncToEmpresa funcToEmpresa){
+
+        return ResponseEntity.ok().body(empresaService.deleteFuncionario(funcToEmpresa.getCnpj(), funcToEmpresa.getCpf()));
+    }
+
     @GetMapping("/empresa/{name}")
     public ResponseEntity<Empresa>getEmpresa(@PathVariable(value = "name") String name){
 
-        return ResponseEntity.ok().body(empresaService.getEmpresa(name));
+        Optional<Empresa> empresaOptional= empresaService.getEmpresa(name);
+        if(!empresaOptional.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            Empresa empresa = empresaOptional.get();
+            return new ResponseEntity<Empresa>(empresa, HttpStatus.OK);
+        }
     }
 
     @CrossOrigin(origins = "*")
@@ -40,4 +63,10 @@ public class EmpresaController {
         return ResponseEntity.created(uri).body(empresaService.saveEmpresa(empresa));
     }
 
+}
+
+@Data
+class FuncToEmpresa {
+    private String cnpj;
+    private String cpf;
 }

@@ -19,6 +19,7 @@ public class User {
     private Long id;
     private String firstname;
     private String lastname;
+    private String cpf;
     private String username;
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)

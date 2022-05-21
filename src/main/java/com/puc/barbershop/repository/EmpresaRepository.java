@@ -4,7 +4,10 @@ import com.puc.barbershop.model.Empresa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
-    Empresa findByName(String name);
+    Optional<Empresa> findByName(String name);
+    Optional<Empresa> findByCnpj(String cnpj);
 }

@@ -32,8 +32,8 @@ public class BarbershopApplication {
 			userService.saveRole(new Role(null, "ROLE_ADMIN"));
 			userService.saveRole(new Role(null, "ROLE_SUPER_ADMIN"));
 
-			userService.saveUser(new User(null, "Leandro", "Oliveira", "leandrobhte", "1234", new ArrayList<>(),null, null));
-			userService.saveUser(new User(null, "Leandro", "Oliveira", "leandrobhte1", "1234", new ArrayList<>(), null, null));
+			userService.saveUser(new User(null, "Leandro", "Oliveira", "102102102-99", "leandrobhte", "1234", new ArrayList<>(),null, null));
+			userService.saveUser(new User(null, "Leandro", "Oliveira","102102103-98", "leandrobhte1", "1234", new ArrayList<>(), null, null));
 
 			userService.addRoleToUser("leandrobhte", "ROLE_USER");
 			userService.addRoleToUser("leandrobhte", "ROLE_MANAGER");
