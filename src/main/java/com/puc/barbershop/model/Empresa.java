@@ -24,6 +24,8 @@ public class Empresa {
     private String cnpj;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<User> funcionarios = new ArrayList<>();
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    private Collection<Servico> servicos = new ArrayList<>();
     private String cep;
     private String rua;
     private String numero;

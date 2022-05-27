@@ -6,6 +6,7 @@ import com.puc.barbershop.model.User;
 import com.puc.barbershop.service.EmpresaService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,24 @@ public class EmpresaController {
     private final EmpresaService empresaService;
 
     @GetMapping("/empresas")
-    public ResponseEntity<List<Empresa>> getEmpresas(){
+    public Page<Empresa> getEmpresas(){
 
-        return ResponseEntity.ok().body(empresaService.getEmpresas());
+        return empresaService.getEmpresas();
+    }
+
+    @GetMapping("/empresas/search")
+    public Page<Empresa> search(
+            @RequestParam("searchTerm") String searchTerm,
+            @RequestParam(
+                    value = "page",
+                    required = false,
+                    defaultValue = "0") int page,
+            @RequestParam(
+                    value = "size",
+                    required = false,
+                    defaultValue = "10") int size) {
+        return empresaService.search(searchTerm, page, size);
+
     }
 
     @CrossOrigin(origins = "*")

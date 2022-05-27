@@ -7,6 +7,10 @@ import com.puc.barbershop.repository.EmpresaRepository;
 import com.puc.barbershop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,9 +40,18 @@ public class EmpresaServiceImpl implements EmpresaService{
     }
 
     @Override
-    public List<Empresa> getEmpresas() {
+    public Page<Empresa> getEmpresas() {
         log.info("Fetchinig all companys!");
-        return empresaRepository.findAll();
+        int page = 0;
+        int size = 10;
+        PageRequest pageRequest = PageRequest.of(
+                page,
+                size,
+                Sort.Direction.ASC,
+                "name");
+        return new PageImpl<>(
+                empresaRepository.findAll(),
+                pageRequest, size);
     }
 
     @Override
@@ -79,5 +92,21 @@ public class EmpresaServiceImpl implements EmpresaService{
             empresa.getFuncionarios().remove(user);
             return empresa;
         }
+    }
+
+    @Override
+    public Page<Empresa> search(
+            String searchTerm,
+            int page,
+            int size) {
+        PageRequest pageRequest = PageRequest.of(
+                page,
+                size,
+                Sort.Direction.ASC,
+                "name");
+
+        return empresaRepository.search(
+                searchTerm.toLowerCase(),
+                pageRequest);
     }
 }
