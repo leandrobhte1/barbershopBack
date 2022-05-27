@@ -32,8 +32,8 @@ public class BarbershopApplication {
 			userService.saveRole(new Role(null, "ROLE_ADMIN"));
 			userService.saveRole(new Role(null, "ROLE_SUPER_ADMIN"));
 
-			userService.saveUser(new User(null, "Leandro", "Oliveira", "102102102-99", "leandrobhte", "12345678", new ArrayList<>(),null, null));
-			userService.saveUser(new User(null, "Leandro", "Oliveira","102102103-98", "leandrobhte1", "12345678", new ArrayList<>(), null, null));
+			/*userService.saveUser(new User(null, "Leandro", "Oliveira", "102102102-99", "leandrobhte1@hotmail.com", "12345678", new ArrayList<>(),null, null));
+			userService.saveUser(new User(null, "Leandro", "Oliveira","102102103-98", "leandrobhte1@gmail.com", "12345678", new ArrayList<>(), null, null));
 
 			userService.addRoleToUser("leandrobhte", "ROLE_USER");
 			userService.addRoleToUser("leandrobhte", "ROLE_MANAGER");
@@ -43,7 +43,7 @@ public class BarbershopApplication {
 			userService.addRoleToUser("leandrobhte1", "ROLE_USER");
 			userService.addRoleToUser("leandrobhte1", "ROLE_MANAGER");
 			userService.addRoleToUser("leandrobhte1", "ROLE_ADMIN");
-			userService.addRoleToUser("leandrobhte1", "ROLE_SUPER_ADMIN");
+			userService.addRoleToUser("leandrobhte1", "ROLE_SUPER_ADMIN");*/
 		};
 	}
 

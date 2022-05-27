@@ -105,6 +105,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+//    @GetMapping(path = "registration/confirm")
+//    public String confirm(@RequestParam("token") String token) {
+//        return userService.confirmToken(token);
+//    }
+
+
     @GetMapping("/refreshToken")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 

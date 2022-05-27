@@ -15,4 +15,5 @@ public interface UserService {
     void deleteUser(User user);
     List<User> getUsers();
 
+//    String confirmToken(String token);
 }

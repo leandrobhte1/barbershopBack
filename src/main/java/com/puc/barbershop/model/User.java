@@ -25,6 +25,6 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
     private Boolean locked = false;
-    private Boolean enabled = false;
+    private Boolean enabled = true;
 
 }
