@@ -19,6 +19,7 @@ public class User {
     private Long id;
     private String firstname;
     private String lastname;
+    private String urlImagemPerfil = "http://assets.stickpng.com/images/585e4bf3cb11b227491c339a.png";
     private String cpf;
     private String username;
     private String password;
