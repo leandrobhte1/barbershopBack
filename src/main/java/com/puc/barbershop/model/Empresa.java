@@ -22,6 +22,8 @@ public class Empresa {
     private Long id;
     private String name;
     private String cnpj;
+    private String descricao;
+    private String urlImagem;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<User> funcionarios = new ArrayList<>();
 //    @ManyToMany(fetch = FetchType.EAGER)
