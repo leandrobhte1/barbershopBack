@@ -22,14 +22,14 @@ public class EmailServiceImpl implements EmailSender {
 
     @Override
     @Async
-    public void send(String to, String email) {
+    public void send(String to,String subject, String email) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper =
                     new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setText(email, true);
             helper.setTo(to);
-            helper.setSubject("Confirm your account");
+            helper.setSubject(subject);
             helper.setFrom("barbershoppuc@gmail.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {

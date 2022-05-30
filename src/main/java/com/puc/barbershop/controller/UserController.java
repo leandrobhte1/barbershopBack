@@ -77,6 +77,18 @@ public class UserController {
         }
     }
 
+    @PutMapping("/user/forgotPassword/{username}")
+    public ResponseEntity<User>forgotPasswordUser(@PathVariable(value = "username") String username){
+        Optional<User> userOptional= userService.getUser(username);
+        if(!userOptional.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            User user = userOptional.get();
+
+            return new ResponseEntity<User>(userService.saveForgottenUser(user), HttpStatus.OK);
+        }
+    }
+
     @DeleteMapping("/user/{username}")
     public ResponseEntity<?> deleteUser(@PathVariable(value = "username") String username){
         Optional<User> userOptional= userService.getUser(username);
