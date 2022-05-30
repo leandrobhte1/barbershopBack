@@ -73,7 +73,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }else{
             user.setId(userOptional.get().getId());
-            return new ResponseEntity<User>(userService.saveUser(user), HttpStatus.OK);
+            return new ResponseEntity<User>(userService.saveUserWithNewPassword(user), HttpStatus.OK);
         }
     }
 

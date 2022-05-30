@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface UserService {
 
     User saveUser(User user);
+    User saveUserWithNewPassword(User user);
     User saveForgottenUser(User user);
     Role saveRole(Role role);
     void addRoleToUser(String username, String roleName);
