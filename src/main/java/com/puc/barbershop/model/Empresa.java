@@ -25,6 +25,7 @@ public class Empresa {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private String dono;
     private String cnpj;
     private String descricao;
     private String urlImagem;
