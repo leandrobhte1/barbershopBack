@@ -1,14 +1,19 @@
 package com.puc.barbershop.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
-@Table(name = "Barbershop")
+@Table(name = "Empresa")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,13 +22,16 @@ import java.util.Collection;
 public class Empresa {
 
     @Id
-    @SequenceGenerator(name = "empresa_sequence", sequenceName = "empresa_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "empresa_sequence")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
     private String cnpj;
     private String descricao;
     private String urlImagem;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private User user;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<User> funcionarios = new ArrayList<>();
 //    @ManyToMany(fetch = FetchType.EAGER)

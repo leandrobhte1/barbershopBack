@@ -3,6 +3,8 @@ package com.puc.barbershop.controller;
 import com.puc.barbershop.model.Empresa;
 import com.puc.barbershop.model.Role;
 import com.puc.barbershop.model.User;
+import com.puc.barbershop.repository.EmpresaRepository;
+import com.puc.barbershop.repository.UserRepository;
 import com.puc.barbershop.service.EmpresaService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ import java.util.Optional;
 public class EmpresaController {
 
     private final EmpresaService empresaService;
+    private final UserRepository userRepository;
+    private final EmpresaRepository empresaRepository;
 
     @GetMapping("/empresas")
     public Page<Empresa> getEmpresas(){
@@ -68,6 +72,18 @@ public class EmpresaController {
             Empresa empresa = empresaOptional.get();
             return new ResponseEntity<Empresa>(empresa, HttpStatus.OK);
         }
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/empresa/{userId}/save")
+    public ResponseEntity<Empresa>saveNewEmpresa(@PathVariable(value = "userId") Long userId,@RequestBody Empresa empresa) throws Exception {
+
+        userRepository.findById(userId).map(user -> {
+            empresa.setUser(user);
+            return empresaRepository.save(empresa);
+        }).orElseThrow(() -> new Exception("Not found User with id = " + userId));
+
+        return new ResponseEntity<>(empresa, HttpStatus.CREATED);
     }
 
     @CrossOrigin(origins = "*")
