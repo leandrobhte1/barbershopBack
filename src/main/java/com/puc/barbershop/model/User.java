@@ -25,7 +25,7 @@ public class User {
     public Long id;
     private String firstname;
     private String lastname;
-    private String urlImagemPerfil = "http://assets.stickpng.com/images/585e4bf3cb11b227491c339a.png";
+    private String urlImagemPerfil = "https://caocidadao.com.br/wp-content/uploads/2019/09/user.png";
     @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     @JsonManagedReference
     @JsonIgnore
