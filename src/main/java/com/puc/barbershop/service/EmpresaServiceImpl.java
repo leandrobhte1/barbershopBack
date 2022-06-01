@@ -55,9 +55,9 @@ public class EmpresaServiceImpl implements EmpresaService{
     }
 
     @Override
-    public Empresa addFuncToEmpresa(String cnpj, String cpf) {
-        log.info("Adding funcionario {} to empresa {} ", cpf, cnpj);
-        Optional<User> userOptional = userRepository.findByCpf(cpf);
+    public Empresa addFuncToEmpresa(String cnpj, String funcionarioUsername) {
+        log.info("Adding funcionario {} to empresa {} ", funcionarioUsername, cnpj);
+        Optional<User> userOptional = userRepository.findByUsername(funcionarioUsername);
         User user = new User();
         if(!userOptional.isPresent()) {
             throw new RuntimeException("User not found in database!");
@@ -75,12 +75,12 @@ public class EmpresaServiceImpl implements EmpresaService{
     }
 
     @Override
-    public Empresa deleteFuncionario(String cnpj, String cpf) {
-        log.info("Deleting funcionario {} to empresa {} ", cpf, cnpj);
-        Optional<User> userOptional = userRepository.findByCpf(cpf);
+    public Empresa deleteFuncionario(String cnpj, String funcionarioUsername) {
+        log.info("Deleting funcionario {} to empresa {} ", funcionarioUsername, cnpj);
+        Optional<User> userOptional = userRepository.findByUsername(funcionarioUsername);
         User user = new User();
         if(!userOptional.isPresent()) {
-            throw new RuntimeException("User not found in database!");
+            throw new RuntimeException("Funcionario not found in database!");
         }else{
             user = userOptional.get();
         }

@@ -53,13 +53,13 @@ public class EmpresaController {
     @PostMapping("/empresa/addFuncionario")
     public ResponseEntity<Empresa>addFuncionario(@RequestBody FuncToEmpresa funcToEmpresa){
 
-        return ResponseEntity.ok().body(empresaService.addFuncToEmpresa(funcToEmpresa.getCnpj(), funcToEmpresa.getCpf()));
+        return ResponseEntity.ok().body(empresaService.addFuncToEmpresa(funcToEmpresa.getCnpj(), funcToEmpresa.getFuncionarioUsername()));
     }
 
     @DeleteMapping("/empresa/deleteFuncionario")
     public ResponseEntity<?> deleteFuncionario(@RequestBody FuncToEmpresa funcToEmpresa){
 
-        return ResponseEntity.ok().body(empresaService.deleteFuncionario(funcToEmpresa.getCnpj(), funcToEmpresa.getCpf()));
+        return ResponseEntity.ok().body(empresaService.deleteFuncionario(funcToEmpresa.getCnpj(), funcToEmpresa.getFuncionarioUsername()));
     }
 
     @GetMapping("/empresa/{name}")
@@ -100,5 +100,5 @@ public class EmpresaController {
 @Data
 class FuncToEmpresa {
     private String cnpj;
-    private String cpf;
+    private String funcionarioUsername;
 }

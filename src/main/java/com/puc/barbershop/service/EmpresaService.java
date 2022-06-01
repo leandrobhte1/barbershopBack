@@ -12,7 +12,7 @@ public interface EmpresaService {
     Empresa saveEmpresa(Empresa empresa);
     Optional<Empresa> getEmpresa(String name);
     Page<Empresa> getEmpresas();
-    Empresa addFuncToEmpresa(String cnpj, String cpf);
-    Empresa deleteFuncionario(String cnpj, String cpf);
+    Empresa addFuncToEmpresa(String cnpj, String funcionarioUsername);
+    Empresa deleteFuncionario(String cnpj, String funcionarioUsername);
     Page<Empresa> search(String searchTerm,int page,int size);
 }
