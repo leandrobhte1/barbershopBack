@@ -1,16 +1,17 @@
 server:
+  port: 8080
   error:
     include-message: always
     include-binding-errors: always
 
 spring:
   datasource:
-    password: Rhcf2306
-    url: jdbc:postgresql://localhost:5432/users
-    username: barbershop
+    password: 76c3964ffca51df896c74fe9139d1c38845937210b731e4a6d2e71be8ea63c26
+    url: jdbc:postgresql://ec2-54-147-33-38.compute-1.amazonaws.com:5432/dcbr624pi0m1c9
+    username: uoyfayevdbtkhc
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

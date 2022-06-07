@@ -80,6 +80,9 @@ public class EmpresaController {
 
         userRepository.findById(userId).map(user -> {
             empresa.setUser(user);
+            if(empresa.getUrlImagem() == "" || empresa.getUrlImagem() == null){
+                empresa.setUrlImagem("http://danielsilvacontabilidade.com.br/empresa2.png");
+            }
             return empresaRepository.save(empresa);
         }).orElseThrow(() -> new Exception("Not found User with id = " + userId));
 

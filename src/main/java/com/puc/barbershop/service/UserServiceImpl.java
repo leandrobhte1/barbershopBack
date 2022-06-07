@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 //        confirmationTokenService.saveConfirmationToken(
 //                confirmationToken);
 //        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
-        String link = "http://localhost:3000";
+        String link = "https://barbershop-site.herokuapp.com/";
         emailSender.send(
                 user.getUsername(), "A sua conta foi criada!",
                 buildEmail(user.getFirstname(), link));

@@ -28,7 +28,7 @@ public class Empresa {
     private String dono;
     private String cnpj;
     private String descricao;
-    private String urlImagem;
+    private String urlImagem = "http://danielsilvacontabilidade.com.br/empresa2.png";
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
