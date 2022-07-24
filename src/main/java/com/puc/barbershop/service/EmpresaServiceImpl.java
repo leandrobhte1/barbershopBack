@@ -2,6 +2,7 @@ package com.puc.barbershop.service;
 
 import com.puc.barbershop.model.Empresa;
 import com.puc.barbershop.model.Role;
+import com.puc.barbershop.model.Servico;
 import com.puc.barbershop.model.User;
 import com.puc.barbershop.repository.EmpresaRepository;
 import com.puc.barbershop.repository.UserRepository;
@@ -37,6 +38,12 @@ public class EmpresaServiceImpl implements EmpresaService{
     public Optional<Empresa> getEmpresa(String name) {
         log.info("Fetchinig company {} ", name);
         return empresaRepository.findByName(name);
+    }
+
+    @Override
+    public Optional<Empresa> getEmpresaById(Long id) {
+        log.info("Fetchinig company {} ", id);
+        return empresaRepository.findById(id);
     }
 
     @Override
@@ -92,6 +99,18 @@ public class EmpresaServiceImpl implements EmpresaService{
             empresa.getFuncionarios().remove(user);
             return empresa;
         }
+    }
+
+    @Override
+    public Empresa saveServicoToEmpresa(Empresa empresa, Servico servico) {
+        empresa.getServicos().add(servico);
+        return empresa;
+    }
+
+    @Override
+    public Empresa deleteServicoFromEmpresa(Empresa empresa, Servico servico) {
+        empresa.getServicos().remove(servico);
+        return empresa;
     }
 
     @Override

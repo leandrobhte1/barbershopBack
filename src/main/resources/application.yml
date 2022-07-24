@@ -6,9 +6,11 @@ server:
 
 spring:
   datasource:
-    password: 76c3964ffca51df896c74fe9139d1c38845937210b731e4a6d2e71be8ea63c26
-    url: jdbc:postgresql://ec2-54-147-33-38.compute-1.amazonaws.com:5432/dcbr624pi0m1c9
-    username: uoyfayevdbtkhc
+    password: cbb80deeba0a756ffa23b616864a843b807170f4402bfbfc6662d301f138155a
+    url: jdbc:postgresql://ec2-100-26-39-41.compute-1.amazonaws.com:5432/df0mole53o102o
+    username: fcfliiosjlrzrb
+    hikari:
+      maxLifeTime: 600000
   jpa:
     hibernate:
       ddl-auto: update

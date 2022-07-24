@@ -2,10 +2,12 @@ package com.puc.barbershop.controller;
 
 import com.puc.barbershop.model.Empresa;
 import com.puc.barbershop.model.Role;
+import com.puc.barbershop.model.Servico;
 import com.puc.barbershop.model.User;
 import com.puc.barbershop.repository.EmpresaRepository;
 import com.puc.barbershop.repository.UserRepository;
 import com.puc.barbershop.service.EmpresaService;
+import com.puc.barbershop.service.ServicoService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class EmpresaController {
 
     private final EmpresaService empresaService;
+    private final ServicoService servicoService;
     private final UserRepository userRepository;
     private final EmpresaRepository empresaRepository;
 
@@ -60,6 +63,40 @@ public class EmpresaController {
     public ResponseEntity<?> deleteFuncionario(@RequestBody FuncToEmpresa funcToEmpresa){
 
         return ResponseEntity.ok().body(empresaService.deleteFuncionario(funcToEmpresa.getCnpj(), funcToEmpresa.getFuncionarioUsername()));
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/empresa/addServico")
+    public ResponseEntity<Empresa>addServico(@RequestBody Servico servico){
+
+        servicoService.saveServico(servico);
+        Optional<Empresa> empresaOptional = empresaService.getEmpresaById(servico.getEmpresaId());
+        if(!empresaOptional.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            Empresa empresa = empresaOptional.get();
+            empresaService.saveServicoToEmpresa(empresa, servico);
+            return new ResponseEntity<Empresa>(empresa, HttpStatus.OK);
+        }
+
+    }
+
+    @DeleteMapping("/empresa/deleteServico")
+    public ResponseEntity<?> deleteServico(@RequestBody Long idEmpresa, @RequestBody Long idServico){
+
+        Optional<Empresa> empresaOptional = empresaService.getEmpresaById(idEmpresa);
+        if(!empresaOptional.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            Empresa empresa = empresaOptional.get();
+            Optional<Servico> servicoOptional = servicoService.getServico(idServico);
+            if(!servicoOptional.isPresent()){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }else{
+                Servico servico = servicoOptional.get();
+                return ResponseEntity.ok().body(empresaService.deleteServicoFromEmpresa(empresa, servico));
+            }
+        }
     }
 
     @GetMapping("/empresa/{name}")
