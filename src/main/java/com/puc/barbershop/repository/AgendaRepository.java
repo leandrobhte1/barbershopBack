@@ -32,5 +32,13 @@ public interface AgendaRepository extends JpaRepository<Agenda, Long> {
                     "insert into Agenda (id, id_empresa, id_cliente, id_funcionario, id_servico, date, horario, status, nota, anotacao) values (:id, :idEmpresa, null, null, null, :date, :horario, 'disponivel', 0, null)",
             nativeQuery = true)
     void openAgenda(@Param("id") Long id, @Param("idEmpresa") Long idEmpresa, @Param("date") LocalDate date, @Param("horario") LocalTime horario);
+
+    @Transactional
+    @Modifying
+    @Query(
+            value =
+                    "SELECT empresa.name as empresa,public.user.firstname, public.user.lastname, agenda.date,agenda.horario,servico.nome as servico FROM public.user LEFT JOIN agenda ON public.user.id = agenda.id_cliente LEFT JOIN empresa ON agenda.id_empresa = empresa.id LEFT JOIN servico ON agenda.id_servico = servico.id WHERE agenda.date = :date and agenda.status = :status order by agenda.horario",
+            nativeQuery = true)
+    List<?> consultaAgendamento(@Param("date") LocalDate date, @Param("status") String status);
 }
 

@@ -14,4 +14,5 @@ public interface AgendaService {
     Agenda deleteAgenda(Long idAgenda);
     void openAgenda(Long id, Long idEmpresa, LocalDate date, LocalTime horario);
     Optional<Agenda> getAgenda(LocalDate date, LocalTime horario);
+    List<?> consultarAgenda(LocalDate date, String status);
 }

@@ -58,6 +58,16 @@ public class AgendaController {
         return agendaList;
     }
 
+    @GetMapping("/agenda/admin/agendados")
+    public List<?> getAgendaAdminAgendados(@RequestParam("date") String date) throws ParseException {
+
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        List<?> agendaList= agendaService.consultarAgenda(localDate, "agendado");
+
+        return agendaList;
+    }
+
     @GetMapping("/agenda/month")
     public List<Agenda> getAgendaMonth(@RequestParam("date") String date) throws ParseException {
 
@@ -66,6 +76,18 @@ public class AgendaController {
         LocalDate lastDay = localDate.withDayOfMonth(localDate.getMonth().length(localDate.isLeapYear()));
 
         List<Agenda> agendaList= agendaService.getAgendaMonth(firstDay, lastDay, "disponivel");
+
+        return agendaList;
+    }
+
+    @GetMapping("/agenda/month/ocupado")
+    public List<Agenda> getAgendaMonthOcupado(@RequestParam("date") String date) throws ParseException {
+
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        LocalDate firstDay = localDate.withDayOfMonth(1);
+        LocalDate lastDay = localDate.withDayOfMonth(localDate.getMonth().length(localDate.isLeapYear()));
+
+        List<Agenda> agendaList= agendaService.getAgendaMonth(firstDay, lastDay, "agendado");
 
         return agendaList;
     }

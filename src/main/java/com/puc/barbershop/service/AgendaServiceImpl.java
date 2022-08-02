@@ -65,4 +65,10 @@ public class AgendaServiceImpl implements AgendaService{
             return agenda;
         }
     }
+
+    @Override
+    public List<?> consultarAgenda(LocalDate date, String status) {
+        log.info("Fetchinig agenda of day {}", date);
+        return agendaRepository.consultaAgendamento(date, status);
+    }
 }
