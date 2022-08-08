@@ -67,6 +67,16 @@ public class AgendaServiceImpl implements AgendaService{
     }
 
     @Override
+    public List<Agenda> getHistory(Long idCliente) {
+        return agendaRepository.getHistory(idCliente);
+    }
+
+    @Override
+    public List<?> consultaHistorico(LocalDate date, String status) {
+        return agendaRepository.consultaHistorico(date, status);
+    }
+
+    @Override
     public List<?> consultarAgenda(LocalDate date, String status) {
         log.info("Fetchinig agenda of day {}", date);
         return agendaRepository.consultaAgendamento(date, status);

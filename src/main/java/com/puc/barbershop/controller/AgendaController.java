@@ -92,6 +92,12 @@ public class AgendaController {
         return agendaList;
     }
 
+    @GetMapping("/agenda/history")
+    public List<Agenda> getHistoryClient(@RequestParam("idCliente") Long idCliente) {
+
+        return agendaService.getHistory(idCliente);
+    }
+
     @GetMapping("/agenda/all")
     public List<Agenda> getAgenda() {
 

@@ -40,5 +40,21 @@ public interface AgendaRepository extends JpaRepository<Agenda, Long> {
                     "SELECT empresa.name as empresa,public.user.firstname, public.user.lastname, agenda.date,agenda.horario,servico.nome as servico FROM public.user LEFT JOIN agenda ON public.user.id = agenda.id_cliente LEFT JOIN empresa ON agenda.id_empresa = empresa.id LEFT JOIN servico ON agenda.id_servico = servico.id WHERE agenda.date = :date and agenda.status = :status order by agenda.horario",
             nativeQuery = true)
     List<?> consultaAgendamento(@Param("date") LocalDate date, @Param("status") String status);
+
+    @Transactional
+    @Modifying
+    @Query(
+            value =
+                    "SELECT empresa.name as empresa,public.user.firstname, public.user.lastname, agenda.nota, agenda.date,agenda.horario,servico.nome as servico FROM public.user LEFT JOIN agenda ON public.user.id = agenda.id_funcionario LEFT JOIN empresa ON agenda.id_empresa = empresa.id LEFT JOIN servico ON agenda.id_servico = servico.id WHERE agenda.date = :date and agenda.status = :status order by agenda.horario",
+            nativeQuery = true)
+    List<?> consultaHistorico(@Param("date") LocalDate date, @Param("status") String status);
+
+    @Transactional
+    @Modifying
+    @Query(
+            value =
+                    "SELECT * from agenda where agenda.id_cliente = :idCliente and agenda.date < NOW()",
+            nativeQuery = true)
+    List<Agenda> getHistory(@Param("idCliente") Long idCliente);
 }
 
