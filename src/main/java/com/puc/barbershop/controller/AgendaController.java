@@ -37,6 +37,7 @@ public class AgendaController {
 
     private final AgendaService agendaService;
     private final AgendaRepository agendaRepository;
+    public int idOpenAgenda = 50000;
 
     @GetMapping("/agenda/disponivel")
     public List<Agenda> getAgendaDisponiveis(@RequestParam("date") String date) throws ParseException {
@@ -118,8 +119,8 @@ public class AgendaController {
 
         long dias = dateInicio.until(dateFim, ChronoUnit.DAYS);
 
-        for(int id = 20000; id <= (20000 + dias); id++){
-            if(id == 20000) {
+        for(int id = idOpenAgenda; id <= (idOpenAgenda + dias); id++){
+            if(id == 40000) {
                 agendaRepository.openAgenda(Long.valueOf(id), openAgenda.getIdEmpresa(), dateInicio, horarioInicio);
             }else{
                 if(horarioAtual.isAfter(horarioFim) || horarioAtual == horarioFim){
@@ -150,8 +151,10 @@ public class AgendaController {
 
         Optional<Agenda> agendaOptional= agendaService.getAgenda(date, horario);
         if(!agendaOptional.isPresent()){
+            log.info("Agenda não disponível para este dia!");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }else{
+            log.info("Agenda encontrada! ");
             Agenda agenda1 = new Agenda();
             agenda1.setId(agendaOptional.get().getId());
             agenda1.setIdEmpresa(agenda.getIdEmpresa());
@@ -160,7 +163,7 @@ public class AgendaController {
             agenda1.setIdServico(agenda.getIdServico());
             agenda1.setDate(LocalDate.parse(agenda.getDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             agenda1.setHorario(LocalTime.parse(agenda.getHorario(), DateTimeFormatter.ofPattern("HH:mm:ss")));
-            agenda1.setStatus(agenda.getStatus());
+            agenda1.setStatus("agendado");
             agenda1.setNota(agenda.getNota());
             agenda1.setAnotacao(agenda.getAnotacao());
             log.info("Updating agenda with id {} ", agenda1.getId());
