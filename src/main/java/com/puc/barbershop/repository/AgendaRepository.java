@@ -45,7 +45,7 @@ public interface AgendaRepository extends JpaRepository<Agenda, Long> {
     @Modifying
     @Query(
             value =
-                    "SELECT empresa.name as empresa,public.user.firstname, public.user.lastname, agenda.nota, agenda.date,agenda.horario,servico.nome as servico FROM public.user LEFT JOIN agenda ON public.user.id = agenda.id_funcionario LEFT JOIN empresa ON agenda.id_empresa = empresa.id LEFT JOIN servico ON agenda.id_servico = servico.id WHERE agenda.date = :date and agenda.status = :status order by agenda.horario",
+                    "SELECT empresa.name as empresa, public.user.firstname, public.user.lastname, agenda.nota, agenda.id, agenda.date, agenda.horario, servico.nome as servico FROM public.user LEFT JOIN agenda ON public.user.id = agenda.id_funcionario LEFT JOIN empresa ON agenda.id_empresa = empresa.id LEFT JOIN servico ON agenda.id_servico = servico.id WHERE agenda.date < NOW() and agenda.date > :date and agenda.status = :status order by agenda.horario",
             nativeQuery = true)
     List<?> consultaHistorico(@Param("date") LocalDate date, @Param("status") String status);
 
@@ -53,8 +53,16 @@ public interface AgendaRepository extends JpaRepository<Agenda, Long> {
     @Modifying
     @Query(
             value =
-                    "SELECT * from agenda where agenda.id_cliente = :idCliente and agenda.date < NOW()",
+                    "SELECT empresa.name as empresa, public.user.firstname, public.user.lastname, agenda.nota, agenda.id, agenda.date, agenda.horario, servico.nome as servico FROM public.user LEFT JOIN agenda ON public.user.id = agenda.id_funcionario LEFT JOIN empresa ON agenda.id_empresa = empresa.id LEFT JOIN servico ON agenda.id_servico = servico.id WHERE agenda.date > NOW() and agenda.date < :date and agenda.status = :status order by agenda.horario",
             nativeQuery = true)
-    List<Agenda> getHistory(@Param("idCliente") Long idCliente);
+    List<?> consultaAgendamentosFuturos(@Param("date") LocalDate date, @Param("status") String status);
+
+    @Transactional
+    @Modifying
+    @Query(
+            value =
+                    "SELECT empresa.name as empresa, public.user.firstname, public.user.lastname, agenda.nota, agenda.date, agenda.id, agenda.horario, servico.nome as servico FROM public.user LEFT JOIN agenda ON public.user.id = agenda.id_funcionario LEFT JOIN empresa ON agenda.id_empresa = empresa.id LEFT JOIN servico ON agenda.id_servico = servico.id where agenda.id_cliente = :idCliente and agenda.date < NOW()",
+            nativeQuery = true)
+    List<?> getHistory(@Param("idCliente") Long idCliente);
 }
 

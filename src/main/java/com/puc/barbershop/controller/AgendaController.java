@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -27,6 +29,7 @@ import java.time.temporal.TemporalAdjuster;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,7 +40,7 @@ public class AgendaController {
 
     private final AgendaService agendaService;
     private final AgendaRepository agendaRepository;
-    public int idOpenAgenda = 50000;
+    public int idOpenAgenda = 963000;
 
     @GetMapping("/agenda/disponivel")
     public List<Agenda> getAgendaDisponiveis(@RequestParam("date") String date) throws ParseException {
@@ -69,6 +72,18 @@ public class AgendaController {
         return agendaList;
     }
 
+    @GetMapping("/agenda/month/today")
+    public List<Agenda> getAgendaMonthToday(@RequestParam("date") String date) throws ParseException {
+
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        LocalDate firstDay = localDate.withDayOfMonth(1);
+        LocalDate lastDay = localDate.withDayOfMonth(localDate.getMonth().length(localDate.isLeapYear()));
+
+        List<Agenda> agendaList= agendaService.getAgendaMonth(localDate, lastDay, "disponivel");
+
+        return agendaList;
+    }
+
     @GetMapping("/agenda/month")
     public List<Agenda> getAgendaMonth(@RequestParam("date") String date) throws ParseException {
 
@@ -94,9 +109,25 @@ public class AgendaController {
     }
 
     @GetMapping("/agenda/history")
-    public List<Agenda> getHistoryClient(@RequestParam("idCliente") Long idCliente) {
+    public List<?> getHistoryClient(@RequestParam("idCliente") Long idCliente) {
 
         return agendaService.getHistory(idCliente);
+    }
+
+    @GetMapping("/agenda/consultaHistorico")
+    public List<?> getConsultaHistorico(@RequestParam("date") String date) {
+
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        return agendaService.consultaHistorico(localDate, "agendado");
+    }
+
+    @GetMapping("/agenda/consultaAgendamentosFuturos")
+    public List<?> getConsultaAgendamentosFuturos(@RequestParam("date") String date) {
+
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        return agendaService.consultaAgendamentosFuturos(localDate, "agendado");
     }
 
     @GetMapping("/agenda/all")
@@ -120,19 +151,20 @@ public class AgendaController {
         long dias = dateInicio.until(dateFim, ChronoUnit.DAYS);
 
         for(int id = idOpenAgenda; id <= (idOpenAgenda + dias); id++){
-            if(id == 40000) {
-                agendaRepository.openAgenda(Long.valueOf(id), openAgenda.getIdEmpresa(), dateInicio, horarioInicio);
+            Long uuid = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+            if(id == 963000) {
+                agendaRepository.openAgenda(Long.valueOf(uuid), openAgenda.getIdEmpresa(), dateInicio, horarioInicio);
             }else{
                 if(horarioAtual.isAfter(horarioFim) || horarioAtual == horarioFim){
                     diaAtual = diaAtual.plusDays(1);
                     if(diaAtual.getDayOfWeek().toString() != "SUNDAY"){
                         horarioAtual = horarioInicio;
-                        agendaRepository.openAgenda(Long.valueOf(id), openAgenda.getIdEmpresa(), diaAtual, horarioAtual);
+                        agendaRepository.openAgenda(Long.valueOf(uuid), openAgenda.getIdEmpresa(), diaAtual, horarioAtual);
                     }
                 }else{
                     if(diaAtual.getDayOfWeek().toString() != "SUNDAY"){
                         horarioAtual = horarioAtual.plusMinutes(30);
-                        agendaRepository.openAgenda(Long.valueOf(id), openAgenda.getIdEmpresa(), diaAtual, horarioAtual);
+                        agendaRepository.openAgenda(Long.valueOf(uuid), openAgenda.getIdEmpresa(), diaAtual, horarioAtual);
                     }
                 }
             }
