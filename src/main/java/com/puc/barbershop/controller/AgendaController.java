@@ -40,7 +40,7 @@ public class AgendaController {
 
     private final AgendaService agendaService;
     private final AgendaRepository agendaRepository;
-    public int idOpenAgenda = 963000;
+    public int idOpenAgenda = 468900;
 
     @GetMapping("/agenda/disponivel")
     public List<Agenda> getAgendaDisponiveis(@RequestParam("date") String date) throws ParseException {
@@ -152,7 +152,7 @@ public class AgendaController {
 
         for(int id = idOpenAgenda; id <= (idOpenAgenda + dias); id++){
             Long uuid = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
-            if(id == 963000) {
+            if(id == 468900) {
                 agendaRepository.openAgenda(Long.valueOf(uuid), openAgenda.getIdEmpresa(), dateInicio, horarioInicio);
             }else{
                 if(horarioAtual.isAfter(horarioFim) || horarioAtual == horarioFim){
